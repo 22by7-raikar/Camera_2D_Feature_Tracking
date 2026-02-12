@@ -13,8 +13,22 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/features2d.hpp>
-#include <opencv2/xfeatures2d.hpp>
-#include <opencv2/xfeatures2d/nonfree.hpp>
+
+// Try to include xfeatures2d for SIFT, BRIEF, FREAK support
+// Available in OpenCV >= 4.3 or with opencv-contrib module
+#ifdef __has_include
+  #if __has_include(<opencv2/xfeatures2d.hpp>)
+    #include <opencv2/xfeatures2d.hpp>
+    #define HAS_XFEATURES2D 1
+  #elif __has_include(<opencv2/xfeatures2d/nonfree.hpp>)
+    #include <opencv2/xfeatures2d/nonfree.hpp>
+    #define HAS_XFEATURES2D 1
+  #else
+    #define HAS_XFEATURES2D 0
+  #endif
+#else
+  #define HAS_XFEATURES2D 0  // Assume not available if compiler doesn't support __has_include
+#endif
 
 #include "dataStructures.h"
 

@@ -1,0 +1,49 @@
+# Build artifacts
+build/
+CMakeFiles/
+*.o
+*.so
+*.a
+*.lib
+
+# Executables
+2D_feature_tracking
+*.exe
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Test output and logs
+*.csv
+*.log
+keypoint_log.csv
+match_log.csv
+timing_log.csv
+
+# Temporary files
+*.tmp
+*.bak
+.temp/
+
+# CMake
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# OS specific
+.AppleDouble
+.LSOverride
+Thumbs.db
