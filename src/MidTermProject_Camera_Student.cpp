@@ -253,16 +253,23 @@ int main(int argc, const char *argv[])
                     cout << "#4 : MATCH KEYPOINT DESCRIPTORS done" << endl;
 
                     // visualize matches between current and previous image
+                    cv::Mat matchImg = ((dataBuffer.end() - 1)->cameraImg).clone();
+                    cv::drawMatches((dataBuffer.end() - 2)->cameraImg, (dataBuffer.end() - 2)->keypoints,
+                                    (dataBuffer.end() - 1)->cameraImg, (dataBuffer.end() - 1)->keypoints,
+                                    matches, matchImg,
+                                    cv::Scalar::all(-1), cv::Scalar::all(-1),
+                                    vector<char>(), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
+
+                    // Save match visualization image to outputs folder
+                    string outputDir = dataPath + "images/outputs/";
+                    stringstream ss;
+                    ss << outputDir << "match_" << detectorType << "_" << descriptorTypeSelected 
+                       << "_frames_" << (imgIndex-1) << "_" << imgIndex << ".png";
+                    cv::imwrite(ss.str(), matchImg);
+
                     bVis = false;
                     if (bVis)
                     {
-                        cv::Mat matchImg = ((dataBuffer.end() - 1)->cameraImg).clone();
-                        cv::drawMatches((dataBuffer.end() - 2)->cameraImg, (dataBuffer.end() - 2)->keypoints,
-                                        (dataBuffer.end() - 1)->cameraImg, (dataBuffer.end() - 1)->keypoints,
-                                        matches, matchImg,
-                                        cv::Scalar::all(-1), cv::Scalar::all(-1),
-                                        vector<char>(), cv::DrawMatchesFlags::DRAW_RICH_KEYPOINTS);
-
                         string windowName = "Matching keypoints between two camera images";
                         cv::namedWindow(windowName, 7);
                         cv::imshow(windowName, matchImg);
@@ -274,7 +281,7 @@ int main(int argc, const char *argv[])
 
             } // eof loop over all images
         } // eof loop over all descriptors
-        } // eof loop over all detectors
+    } // eof loop over all detectors
 
     // Close log files
     keypointLog.close();
@@ -282,6 +289,7 @@ int main(int argc, const char *argv[])
     cout << "\n=== Analysis Complete ==="  << endl;
     cout << "Keypoint statistics saved to: ../keypoint_log.csv" << endl;
     cout << "Match statistics saved to: ../match_log.csv" << endl;
+    cout << "Match images saved to: ../images/outputs/" << endl;
     cout << "Timing information is printed during execution." << endl;
 
     return 0;
