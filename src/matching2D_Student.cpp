@@ -52,11 +52,21 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
 
         // 6. filter matches using descriptor distance ratio test
         const float ratio_thresh = 0.8f;
-        for (size_t i = 0; i < knn_matches.size(); i++)
+        for(const auto& knn_match : knn_matches)
         {
-            if (knn_matches[i][0].distance < ratio_thresh * knn_matches[i][1].distance)
+            if(knn_match[0].distance < ratio_thresh * knn_match[1].distance)
             {
-                matches.push_back(knn_matches[i][0]);
+                matches.push_back(knn_match[0]);
+            }
+        }
+    }
+}
+
+// 4. Use one of several types of state-of-art descriptors to uniquely identify keypoints
+void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descriptors, string descriptorType)
+{
+    // select appropriate descriptor
+    cv::Ptr<cv::DescriptorExtractor> extractor;
             }
         }
     }
