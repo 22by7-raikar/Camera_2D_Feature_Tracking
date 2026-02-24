@@ -101,6 +101,6 @@ STATISTICS FOR FAST + ORB:
 - Keypoints Detected: 217-248 per frame (vehicle ROI filtered)
 - Total Time Per Frame Pair: ~7.5 ms
 
-PERFORMANCE RATING: ★★★★★ (EXCELLENT)
+PERFORMANCE RATING: 5/5 (EXCELLENT)
 Fastest combination with robust match consistency
 Ideal for real-time autonomous driving applications

@@ -100,5 +100,5 @@ STATISTICS FOR SHITOMASI + BRISK:
 - Average Matches Per Frame: 85.7
 - Keypoints Detected: 118-125 per frame (vehicle ROI filtered)
 
-PERFORMANCE RATING: ★★★★☆ (VERY GOOD)
+PERFORMANCE RATING: 4/5 (VERY GOOD)
 Reliable detector with good match consistency

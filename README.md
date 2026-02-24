@@ -14,7 +14,7 @@ This project implements a complete 2D feature tracking pipeline that:
 
 **Use Case**: Autonomous driving systems need to reliably detect and track preceding vehicles for collision avoidance. This system detects keypoints on the vehicle and tracks them across frames to monitor relative motion.
 
-![Keypoints](/home/apr/Udacity/sfnd/Camera_2D_Feature_Tracking/images/keypoints.png)
+![Keypoints](images/keypoints.png)
 
 ---
 
@@ -239,7 +239,7 @@ cd build
 
 ## Output Analysis
 
-![Output](/home/apr/Udacity/sfnd/Camera_2D_Feature_Tracking/images/outputs/match_SHITOMASI_ORB_frames_0_1.png)
+![Output](images/outputs/match_SHITOMASI_ORB_frames_0_1.png)
 
 ### Generated Files
 
@@ -434,7 +434,7 @@ Best for real-time autonomous driving applications
 **Sample Keypoint Statistics** (from keypoint_log.csv):
 
 | ImageIndex | DetectorType | NumKeypoints | MinSize | MaxSize | MeanSize |
-|------------|--|---|---|---|---|---|
+|------------|--------------|-------------|---------|---------|----------|
 | 0 | SHITOMASI | 125 | 4 | 4 | 4.00 |
 | 1 | HARRIS | 101 | 6 | 6 | 6.00 |
 | 2 | FAST | 228 | 7 | 7 | 7.00 |
@@ -495,12 +495,12 @@ For a comprehensive overview of all detector/descriptor combinations and their p
 [**Performance Analysis Report**](images/outputs/performance_analysis.txt)
 
 This includes:
-- ✅ Top 10 combinations ranked by match consistency
-- ✅ Fastest combinations with timing breakdown
-- ✅ Detector characteristics (keypoint size, count, properties)
-- ✅ Descriptor quality metrics
-- ✅ Use-case specific recommendations
-- ✅ Complete performance benchmarks
+- Top 10 combinations ranked by match consistency
+- Fastest combinations with timing breakdown
+- Detector characteristics (keypoint size, count, properties)
+- Descriptor quality metrics
+- Use-case specific recommendations
+- Complete performance benchmarks
 
 ---
 
