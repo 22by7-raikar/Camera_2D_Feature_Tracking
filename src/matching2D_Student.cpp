@@ -65,16 +65,18 @@ void matchDescriptors(std::vector<cv::KeyPoint> &kPtsSource, std::vector<cv::Key
 // 4. Use one of several types of state-of-art descriptors to uniquely identify keypoints
 void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descriptors, string descriptorType)
 {
-    // select appropriate descriptor
-    cv::Ptr<cv::DescriptorExtractor> extractor;
-            }
+    // Patch-based binary descriptors (ORB, BRISK, BRIEF, FREAK) can overflow when
+    // keypoint sizes are very large (e.g. from SIFT detection). Cap to safe max.
+    if (descriptorType.compare("SIFT") != 0)
+    {
+        const float maxKpSize = 31.0f;
+        for (auto &kp : keypoints)
+        {
+            kp.size = min(kp.size, maxKpSize);
+            kp.octave = 0;  // reset SIFT-encoded octave field to prevent ORB/BRISK overflow
         }
     }
-}
 
-// 4. Use one of several types of state-of-art descriptors to uniquely identify keypoints
-void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descriptors, string descriptorType)
-{
     // select appropriate descriptor
     cv::Ptr<cv::DescriptorExtractor> extractor;
     if (descriptorType.compare("BRISK") == 0)
@@ -117,65 +119,23 @@ void descKeypoints(vector<cv::KeyPoint> &keypoints, cv::Mat &img, cv::Mat &descr
 
     else if (descriptorType.compare("SIFT") == 0)
     {
-#if HAS_XFEATURES2D
-        // SIFT from opencv_contrib (OpenCV >= 4.3 or with opencv-contrib installed)
         extractor = cv::xfeatures2d::SIFT::create();
-#else
-        // Fallback: xfeatures2d not available, use BRISK instead
-        cout << "NOTE: SIFT descriptor requires opencv-contrib module (see README). Falling back to BRISK." << endl;
-        int threshold = 30;
-        int octaves = 3;
-        float patternScale = 1.0f;
-        extractor = cv::BRISK::create(threshold, octaves, patternScale);
-#endif
     }
 
     else if (descriptorType.compare("BRIEF") == 0)
     {
-#if HAS_XFEATURES2D
-        // BRIEF from opencv_contrib
         int bytes = 32;  // length of brief descriptor in bytes
         bool useOrientation = false;  // default BRIEF is not rotation invariant
         extractor = cv::xfeatures2d::BriefDescriptorExtractor::create(bytes, useOrientation);
-#else
-        // Fallback: xfeatures2d not available, use ORB instead
-        cout << "NOTE: BRIEF descriptor requires opencv-contrib module (see README). Falling back to ORB." << endl;
-        int nfeatures = 500;
-        float scaleFactor = 1.2f;
-        int nlevels = 8;
-        int edgeThreshold = 31;
-        int firstLevel = 0;
-        int WTA_K = 2;
-        cv::ORB::ScoreType scoreType = cv::ORB::HARRIS_SCORE;
-        int patchSize = 31;
-        int fastThreshold = 20;
-        extractor = cv::ORB::create(nfeatures, scaleFactor, nlevels, edgeThreshold, firstLevel, WTA_K, scoreType, patchSize, fastThreshold);
-#endif
     }
 
     else if (descriptorType.compare("FREAK") == 0)
     {
-#if HAS_XFEATURES2D
-        // FREAK from opencv_contrib
         bool orientationNormalized = true;
         bool scaleNormalized = true;
         float patternScale = 22.0f;
         int nOctaves = 4;
         extractor = cv::xfeatures2d::FREAK::create(orientationNormalized, scaleNormalized, patternScale, nOctaves);
-#else
-        // Fallback: xfeatures2d not available, use ORB instead
-        cout << "NOTE: FREAK descriptor requires opencv-contrib module (see README). Falling back to ORB." << endl;
-        int nfeatures = 500;
-        float scaleFactor = 1.2f;
-        int nlevels = 8;
-        int edgeThreshold = 31;
-        int firstLevel = 0;
-        int WTA_K = 2;
-        cv::ORB::ScoreType scoreType = cv::ORB::HARRIS_SCORE;
-        int patchSize = 31;
-        int fastThreshold = 20;
-        extractor = cv::ORB::create(nfeatures, scaleFactor, nlevels, edgeThreshold, firstLevel, WTA_K, scoreType, patchSize, fastThreshold);
-#endif
     }
 
     else
@@ -316,22 +276,7 @@ void detKeypointsModern(std::vector<cv::KeyPoint> &keypoints, cv::Mat &img, std:
 
     if(detectorType.compare("SIFT")==0)
     {
-#if HAS_XFEATURES2D
-        // Scale-Invariant Feature Transform (SIFT) detector from opencv_contrib
-        // Requires OpenCV >= 4.3 or opencv-contrib module
         detector = cv::xfeatures2d::SIFT::create();
-#else
-        // Fallback: xfeatures2d not available, use AKAZE instead
-        cout << "NOTE: SIFT detector requires opencv-contrib module (see README). Falling back to AKAZE." << endl;
-        cv::AKAZE::DescriptorType akDescriptorType = cv::AKAZE::DESCRIPTOR_MLDB;
-        int descriptorSize = 0;
-        int descriptorChannels = 3;
-        float threshold = 0.001f;
-        int nOctaves = 4;
-        int nOctaveLayers = 4;
-        cv::KAZE::DiffusivityType diffusivity = cv::KAZE::DIFF_PM_G2;
-        detector = cv::AKAZE::create(akDescriptorType, descriptorSize, descriptorChannels, threshold, nOctaves, nOctaveLayers, diffusivity);
-#endif
     }
 
     else if(detectorType.compare("FAST")==0)

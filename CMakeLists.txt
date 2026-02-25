@@ -29,12 +29,16 @@ add_definitions(${OpenCV_DEFINITIONS})
 # Executable for create matrix exercise
 add_executable (2D_feature_tracking src/matching2D_Student.cpp src/MidTermProject_Camera_Student.cpp)
 
-# Link to xfeatures2d if available
-find_library(XFEATURES2D_LIB opencv_xfeatures2d PATHS /tmp/opencv/build/lib NO_DEFAULT_PATH)
-if(XFEATURES2D_LIB)
-    message(STATUS "Found xfeatures2d library: ${XFEATURES2D_LIB}")
-    target_link_libraries (2D_feature_tracking ${OpenCV_LIBRARIES} ${XFEATURES2D_LIB})
-else()
-    message(STATUS "xfeatures2d library not found, linking without it")
-    target_link_libraries (2D_feature_tracking ${OpenCV_LIBRARIES})
+# Link to xfeatures2d (required)
+find_library(XFEATURES2D_LIB opencv_xfeatures2d
+    PATHS /tmp/opencv/build/lib
+          /usr/lib/x86_64-linux-gnu
+          /usr/local/lib
+    PATH_SUFFIXES opencv4)
+if(NOT XFEATURES2D_LIB)
+    message(FATAL_ERROR "opencv_xfeatures2d library not found. "
+        "Please build OpenCV with the contrib modules (xfeatures2d). "
+        "See README for instructions.")
 endif()
+message(STATUS "Found xfeatures2d library: ${XFEATURES2D_LIB}")
+target_link_libraries (2D_feature_tracking ${OpenCV_LIBRARIES} ${XFEATURES2D_LIB})
